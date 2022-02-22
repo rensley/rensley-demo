@@ -1,0 +1,30 @@
+name: 'Require Approvals'
+
+on:
+  push:
+    branches:
+      - "main"
+      - "stg"
+      - "uat"
+      - "int"
+
+
+jobs:
+  deploy-int:
+    runs-on: 'ubuntu-latest'
+    environment: 'int'
+
+  deploy-uat:
+    runs-on: 'ubuntu-latest'
+    environment: 'uat'
+    needs: [ deploy-int]
+
+  deploy-stg:
+    runs-on: 'ubuntu-latest'
+    environment: 'stg'
+    needs: [ deploy-int, deploy-uat]
+  
+  deploy-prod:
+    runs-on: 'ubuntu-latest'
+    environment: 'prod'
+    needs: [ deploy-int, deploy-uat, deploy-stg]
